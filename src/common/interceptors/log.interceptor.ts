@@ -1,18 +1,19 @@
 import { CallHandler, ExecutionContext, NestInterceptor } from '@nestjs/common';
-import { Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 export class LogInterceptor implements NestInterceptor {
-  intercept(
-    context: ExecutionContext,
-    next: CallHandler<any>,
-  ): Observable<any> | Promise<Observable<any>> {
-    const dt = Date.now();
-    return next.handle().pipe(
-      tap(() => {
-        const request = context.switchToHttp().getRequest();
-        console.log(request.method);
-        console.log(`The execution time is ${Date.now() - dt} miliseconds`);
-      }),
-    );
-  }
+    intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+        const dt = Date.now();
+
+        return next.handle().pipe(
+            tap(() => {
+                const request = context.switchToHttp().getRequest();
+
+                console.log(`URL: ${request.url}`);
+                console.log(`Method: ${request.method}`);
+                console.log(`Time execution: + ${Date.now() - dt} miliseconds`);
+            }),
+        );
+    }
 }

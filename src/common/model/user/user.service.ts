@@ -1,104 +1,109 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/database/prisma.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { hash, compare } from 'bcrypt';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { DeleteUserDto } from './dto/delete-user.dto';
-import { UserExistsException } from 'src/common/exceptions/user/email-in-use.exception';
-import { UserNotFoundException } from 'src/common/exceptions/user/user-not-found.exception';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { UpdateUserDTO } from './dto/update-put-user.dto';
+import { UpdatePatchUserDTO } from './dto/update-patch-user.dto';
+import * as bcrypt from 'bcrypt';
+import { CreateUserDTO } from './dto/create-user.dto';
+import { PrismaService } from 'src/common/database/prisma.service';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) {}
 
-  async create(data: CreateUserDto) {
-    try {
-      const saltrounds = 10;
-      const hashPassword = await hash(data.password, saltrounds);
+  async create(data: CreateUserDTO) {
+    const salt = await bcrypt.genSalt();
 
-      const lowerEmail = data.email.toLowerCase();
+    data.password = await bcrypt.hash(data.password, salt);
 
-      this.exists(lowerEmail);
-
-      return await this.prisma.user.create({
-        data: {
-          ...data,
-          email: lowerEmail,
-          password: hashPassword,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    return this.prisma.user.create({
+      data,
+    });
   }
 
-  async findAll() {
+  async readAll() {
     const users = await this.prisma.user.findMany();
-    users.forEach((user) => delete user.password);
     return users;
   }
 
-  async findByEmail(email: string) {
-    const lowerEmail = email.toLowerCase();
+  async readOne(id: string) {
+    await this.existingUser(id);
+
     const user = await this.prisma.user.findUnique({
-      where: {
-        email: lowerEmail,
-      },
-    });
-
-    if (!user) {
-      throw new UserNotFoundException();
-    }
-    delete user.password;
-    return user;
-  }
-
-  async findOne(id: string) {
-    return await this.prisma.user.findUnique({
       where: {
         id,
       },
     });
+    return user;
   }
 
-  async update(id: string, data: UpdateUserDto) {
-    return await this.prisma.user.update({
+  async update(id: string, data: UpdateUserDTO) {
+    await this.existingUser(id);
+
+    const salt = await bcrypt.genSalt();
+    data.password = await bcrypt.hash(data.password, salt);
+
+    const updateUser = await this.prisma.user.update({
       data,
       where: {
         id,
       },
     });
+    return updateUser;
   }
 
-  async delete(id: string, pwd: DeleteUserDto) {
-    await this.validatePwd(id, pwd.currentPwd);
-    return await this.prisma.user.delete({
-      where: {
-        id,
-      },
-    });
-  }
+  async updatePartial(
+    id: string,
+    { name, email, password, role }: UpdatePatchUserDTO,
+  ) {
+    await this.existingUser(id);
 
-  private async validatePwd(id: string, currentPwd: string): Promise<void> {
-    const user = await this.prisma.user.findUnique({
-      where: {
-        id,
-      },
-    });
-    const isCorrectPwd = await compare(currentPwd, user.password);
+    const data: any = {};
 
-    if (!isCorrectPwd) {
-      throw new BadRequestException();
+    if (name) {
+      data.name = name;
     }
+
+    if (email) {
+      data.email = email;
+    }
+
+    if (password) {
+      const salt = await bcrypt.genSalt();
+      data.password = await bcrypt.hash(password, salt);
+    }
+    if (role) {
+      data.role = role;
+    }
+
+    const updatePartialUser = await this.prisma.user.update({
+      data,
+      where: {
+        id,
+      },
+    });
+    return updatePartialUser;
   }
 
-  async exists(email: string) {
+  async delete(id: string) {
+    await this.existingUser(id);
+
+    const deleteUser = await this.prisma.user.delete({
+      where: {
+        id,
+      },
+    });
+
+    return deleteUser;
+  }
+
+  async existingUser(id: string) {
     if (
-      await this.prisma.user.findUnique({
-        where: { email },
-      })
+      !(await this.prisma.user.count({
+        where: {
+          id,
+        },
+      }))
     ) {
-      throw new UserExistsException();
+      throw new NotFoundException(`User ${id} not found`);
     }
   }
 }

@@ -1,15 +1,54 @@
-import { Module } from '@nestjs/common';
+import { ThrottlerGuard } from '@nestjs/throttler/dist/throttler.guard';
+import { Module, forwardRef } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserModule } from './common/model/user/user.module';
-import { CategoryModule } from './common/model/category/category.module';
-import { ProductModule } from './common/model/product/product.module';
-import { PurchaseModule } from './common/model/purchase/purchase.module';
 import { AuthModule } from './auth/auth.module';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
+import { ConfigModule } from '@nestjs/config';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
+import { UserModule } from './common/model/user/user.module';
 
 @Module({
-  imports: [UserModule, CategoryModule, ProductModule, PurchaseModule, AuthModule],
+  imports: [
+    MailerModule.forRoot({
+      transport: {
+        service: 'gmail',
+        auth: {
+          user: 'ifmsinterage@gmail.com ',
+          pass: 'jrbq ufbx cfym hdjx',
+        },
+      },
+      defaults: {
+        from: '"NO-REPLY" <no-reply@ifms.interage.edu.br>', //endereço de email que sairá do servidor
+      },
+      template: {
+        dir: __dirname + '/templates', //procura no meu proprio diretorio a pasta templates
+        adapter: new PugAdapter(),
+        options: {
+          strict: true,
+        },
+      },
+    }),
+    ConfigModule.forRoot(),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60,
+        limit: 3,
+      },
+    ]),
+    forwardRef(() => UserModule),
+    forwardRef(() => AuthModule),
+  ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
+  exports: [AppService],
 })
 export class AppModule {}

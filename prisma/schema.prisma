@@ -15,7 +15,6 @@ model User {
   password   String
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
-  role       Role         @default(USER)
   UserTokens UserTokens[]
   Purchase   Purchase[]
 }
@@ -56,9 +55,4 @@ model Purchase {
   reviewNote    Int?
   reviewComment String?
   createdAt     DateTime @default(now())
-}
-
-enum Role {
-  USER
-  ADMIN
 }

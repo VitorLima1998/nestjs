@@ -6,40 +6,56 @@ import {
   Param,
   Patch,
   Post,
+  Put,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDTO } from './dto/update-put-user.dto';
+import { UpdatePatchUserDTO } from './dto/update-patch-user.dto';
 import { UserService } from './user.service';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { DeleteUserDto } from './dto/delete-user.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/common/guards/auth.guard';
+import { RoleGuard } from 'src/common/guards/role.guard';
 import { LogInterceptor } from 'src/common/interceptors/log.interceptor';
+import { ParamId } from 'src/common/decorators/param-id.decorator';
+import { CreateUserDTO } from './dto/create-user.dto';
+// import { Role } from '@prisma/client';
+// import { Roles } from 'src/common/decorators/roles.decorator';
 
-@ApiTags('Users')
-@Controller('user')
+// @Roles(Role.ADMIN)
+@UseGuards(AuthGuard, RoleGuard)
 @UseInterceptors(LogInterceptor)
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
   @Post()
-  async create(@Body() data: CreateUserDto) {
+  async create(@Body() data: CreateUserDTO) {
     return this.userService.create(data);
   }
   @Get()
-  async findAll() {
-    return this.userService.findAll();
-  }
-  @Get('/:email')
-  async findByEmail(@Param('email') id: string) {
-    return this.userService.findOne(id);
+  async read() {
+    return this.userService.readAll();
   }
 
-  @Patch('/:id')
-  async update(@Param('id') id: string, @Body() data: UpdateUserDto) {
+  @Get('/:id')
+  async readOne(@ParamId() id: string) {
+    console.log({ id });
+
+    return this.userService.readOne(id);
+  }
+  @Put('/:id')
+  async update(@Body() data: UpdateUserDTO, @Param('id') id: string) {
     return this.userService.update(id, data);
   }
-
+  @Patch('/:id')
+  async updatePartial(
+    @Body() data: UpdatePatchUserDTO,
+    @Param('id') id: string,
+  ) {
+    return this.userService.updatePartial(id, data);
+  }
   @Delete('/:id')
-  async remove(@Param('id') id: string, @Body() pwd: DeleteUserDto) {
-    return this.userService.delete(id, pwd);
+  async delete(@Param('id') id: string) {
+    return this.userService.delete(id);
   }
 }

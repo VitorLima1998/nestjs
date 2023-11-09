@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { PrismaService } from 'src/database/prisma.service';
+import { PrismaService } from 'src/common/database/prisma.service';
 import { ProductNotFoundException } from 'src/common/exceptions/product/product-not-found.exception';
 import { ProductExistsException } from 'src/common/exceptions/product/product-name-in-use.exception';
 

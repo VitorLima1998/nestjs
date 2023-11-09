@@ -1,35 +1,27 @@
-import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEmail,
+  IsEnum,
   IsOptional,
   IsString,
   IsStrongPassword,
 } from 'class-validator';
+import { Role } from 'src/common/enums/role.enum';
 
-export class CreateUserDto {
-  @ApiProperty({
-    example: 'example@example.com',
-  })
+export class CreateUserDTO {
+  @IsString()
+  name: string;
   @IsEmail()
   email: string;
-
-  @ApiProperty({
-    example: 'S3nh@123',
+  @IsStrongPassword({
+    minLength: 6,
+    minLowercase: 0,
+    minSymbols: 0,
+    minUppercase: 0,
+    minNumbers: 0,
   })
-  @IsStrongPassword()
   password: string;
-
-  @ApiProperty({
-    example: 'John Doe',
-  })
-  @IsString()
   @IsOptional()
-  name: string;
-
-  @ApiProperty({
-    example: '123 Main Street, Apt 4B. Austin, TX78701. EUA',
-  })
-  @IsString()
   @IsOptional()
-  address: string;
+  @IsEnum(Role)
+  role: number;
 }

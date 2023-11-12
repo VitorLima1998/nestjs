@@ -7,4 +7,9 @@ export class CreateCategoryDto {
   })
   @IsString()
   name: string;
+  @IsString()
+  description: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date;
 }

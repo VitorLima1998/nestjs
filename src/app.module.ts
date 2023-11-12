@@ -8,7 +8,9 @@ import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
-import { UserModule } from './common/model/user/user.module';
+import { UserModule } from './model/user/user.module';
+import { CategoryModule } from './model/category/category.module';
+import { ProductModule } from './model/product/product.module';
 
 @Module({
   imports: [
@@ -35,11 +37,13 @@ import { UserModule } from './common/model/user/user.module';
     ThrottlerModule.forRoot([
       {
         ttl: 60,
-        limit: 3,
+        limit: 300,
       },
     ]),
     forwardRef(() => UserModule),
     forwardRef(() => AuthModule),
+    forwardRef(() => CategoryModule),
+    forwardRef(() => ProductModule),
   ],
   controllers: [AppController],
   providers: [

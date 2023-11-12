@@ -9,7 +9,7 @@ import { AuthRegisterDTO } from './dto/auth-register.dto';
 import * as bcrypt from 'bcrypt';
 import { MailerService } from '@nestjs-modules/mailer';
 import { isString } from 'class-validator';
-import { UserService } from 'src/common/model/user/user.service';
+import { UserService } from 'src/model/user/user.service';
 import { PrismaService } from 'src/common/database/prisma.service';
 
 @Injectable()

@@ -11,13 +11,15 @@ export class CategoryService {
 
   async create(data: CreateCategoryDto) {
     this.exists(data.name);
+
+    console.log(data);
     return this.prisma.category.create({
       data,
     });
   }
 
   async findAll() {
-    return await this.prisma.user.findMany();
+    return await this.prisma.category.findMany();
   }
 
   async findOne(id: string) {

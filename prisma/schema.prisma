@@ -9,7 +9,7 @@ datasource db {
 
 model User {
   id         String       @id @default(uuid())
-  email      String       @unique
+  email      String       @unique()
   name       String?
   address    String?
   password   String
@@ -25,16 +25,28 @@ model UserTokens {
   userId String
 }
 
+model File {
+  id            String   @id @default(uuid())
+  fileName      String
+  contentLength Int
+  contentType   String
+  url           String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  productImage  Product  @relation(fields: [productId], references: [id])
+  productId     String
+}
+
 model Product {
   id                 String     @id @default(uuid())
   name               String
   urlName            String
-  picture            String
   basePrice          Decimal
   discountPercentage Int        @default(0)
   stock              Int
   description        String?
   createdAt          DateTime   @default(now())
+  pictures           File[]
   categories         Category[]
   Purchase           Purchase[]
 }

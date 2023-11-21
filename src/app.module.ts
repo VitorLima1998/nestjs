@@ -11,6 +11,7 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
 import { UserModule } from './model/user/user.module';
 import { CategoryModule } from './model/category/category.module';
 import { ProductModule } from './model/product/product.module';
+import { FilesModule } from './model/files/files.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { ProductModule } from './model/product/product.module';
     forwardRef(() => AuthModule),
     forwardRef(() => CategoryModule),
     forwardRef(() => ProductModule),
+    FilesModule,
   ],
   controllers: [AppController],
   providers: [

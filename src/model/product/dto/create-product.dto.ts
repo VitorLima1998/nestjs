@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDateString, IsDecimal, IsInt, IsString } from 'class-validator';
-
 export class CreateProductDto {
   @ApiProperty({
     example: 'Iphone 14Pro Max',
@@ -17,9 +16,6 @@ export class CreateProductDto {
   @ApiProperty({
     example: 'https://exemplo.com/imagem.jpg',
   })
-  @IsString()
-  picture: string;
-
   @ApiProperty({
     example: 999.99,
   })
@@ -44,9 +40,6 @@ export class CreateProductDto {
   @IsString()
   description: string;
 
-  @ApiProperty({
-    example: '1998-01-31',
-  })
   @IsDateString()
   createdAt: Date;
 }

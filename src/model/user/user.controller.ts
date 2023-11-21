@@ -7,14 +7,14 @@ import {
   Patch,
   Post,
   Put,
-  UseGuards,
+  // UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { UpdateUserDTO } from './dto/update-put-user.dto';
 import { UpdatePatchUserDTO } from './dto/update-patch-user.dto';
 import { UserService } from './user.service';
-import { AuthGuard } from 'src/common/guards/auth.guard';
-import { RoleGuard } from 'src/common/guards/role.guard';
+// import { AuthGuard } from 'src/common/guards/auth.guard';
+// import { RoleGuard } from 'src/common/guards/role.guard';
 import { LogInterceptor } from 'src/common/interceptors/log.interceptor';
 import { ParamId } from 'src/common/decorators/param-id.decorator';
 import { CreateUserDTO } from './dto/create-user.dto';
@@ -22,7 +22,7 @@ import { CreateUserDTO } from './dto/create-user.dto';
 // import { Roles } from 'src/common/decorators/roles.decorator';
 
 // @Roles(Role.ADMIN)
-@UseGuards(AuthGuard, RoleGuard)
+// @UseGuards(AuthGuard, RoleGuard)
 @UseInterceptors(LogInterceptor)
 @Controller('users')
 export class UserController {

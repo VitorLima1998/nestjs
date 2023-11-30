@@ -8,24 +8,16 @@ datasource db {
 }
 
 model User {
-  id         String       @id @default(uuid())
-  email      String       @unique()
-  name       String?
-  address    String?
-  password   String
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  UserTokens UserTokens[]
-  Purchase   Purchase[]
+  id        String    @id @default(uuid())
+  email     String    @unique()
+  name      String?
+  password  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt()
+  deletedAt DateTime?
 }
 
-model UserTokens {
-  id     String @id @default(uuid())
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String
-}
-
-model File {
+model Image {
   id            String   @id @default(uuid())
   fileName      String
   contentLength Int
@@ -38,37 +30,25 @@ model File {
 }
 
 model Product {
-  id                 String     @id @default(uuid())
-  name               String
-  urlName            String
-  basePrice          Decimal
-  discountPercentage Int        @default(0)
-  stock              Int
-  description        String?
-  createdAt          DateTime   @default(now())
-  pictures           File[]
-  categories         Category[]
-  Purchase           Purchase[]
+  id          String    @id @default(uuid())
+  name        String    @unique()
+  description String?
+  price       Decimal
+  stock       Int
+  category    Category  @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  images      Image[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
 }
 
 model Category {
   id          String    @id @default(uuid())
-  name        String
+  name        String    @unique()
   description String
   products    Product[]
   createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt()
   deletedAt   DateTime?
-}
-
-model Purchase {
-  id            String   @id @default(uuid())
-  product       Product  @relation(fields: [productId], references: [id])
-  productId     String
-  user          User     @relation(fields: [userId], references: [id])
-  userId        String
-  totalPrice    Decimal
-  reviewNote    Int?
-  reviewComment String?
-  createdAt     DateTime @default(now())
 }

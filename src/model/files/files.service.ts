@@ -16,7 +16,7 @@ export class FilesService {
       fileUploaded.fileName
     }`;
 
-    return await this.prisma.file.create({
+    return await this.prisma.image.create({
       data: fileUploaded,
     });
   }

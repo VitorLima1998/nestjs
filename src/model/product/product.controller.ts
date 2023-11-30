@@ -18,7 +18,7 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post()
-  create(@Body() createProductDto: CreateProductDto) {
+  async create(@Body() createProductDto: CreateProductDto) {
     return this.productService.create(createProductDto);
   }
 
@@ -39,6 +39,6 @@ export class ProductController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.productService.remove(id);
+    return this.productService.delete(id);
   }
 }

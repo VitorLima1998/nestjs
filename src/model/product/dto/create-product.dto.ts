@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsDecimal, IsInt, IsString } from 'class-validator';
+import { IsDecimal, IsInt, IsString } from 'class-validator';
+
 export class CreateProductDto {
   @ApiProperty({
     example: 'Iphone 14Pro Max',
@@ -8,38 +9,23 @@ export class CreateProductDto {
   name: string;
 
   @ApiProperty({
-    example: 'https://exemplo.com/imagem.jpg',
-  })
-  @IsString()
-  urlName: string;
-
-  @ApiProperty({
-    example: 'https://exemplo.com/imagem.jpg',
-  })
-  @ApiProperty({
-    example: 999.99,
-  })
-  @IsDecimal()
-  basePrice: number;
-
-  @ApiProperty({
-    example: 10,
-  })
-  @IsInt()
-  discountPercentage: number;
-
-  @ApiProperty({
-    example: 31,
-  })
-  @IsInt()
-  stock: number;
-
-  @ApiProperty({
     example: 'This is an iPhone 14 Pro Max with 256GB of memory.',
   })
   @IsString()
   description: string;
 
-  @IsDateString()
-  createdAt: Date;
+  @ApiProperty({
+    example: 999.99,
+  })
+  @IsDecimal()
+  price: number;
+
+  @ApiProperty({
+    example: 10,
+  })
+  @IsInt()
+  stock: number;
+
+  @IsString()
+  categoryId: string;
 }

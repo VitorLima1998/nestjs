@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { IsDateString, IsOptional, IsString } from 'class-validator';
 
 export class CreateCategoryDto {
   @ApiProperty({
@@ -9,7 +9,13 @@ export class CreateCategoryDto {
   name: string;
   @IsString()
   description: string;
+  @IsDateString()
+  @IsOptional()
   createdAt: Date;
+  @IsOptional()
+  @IsDateString()
   updatedAt: Date;
+  @IsOptional()
+  @IsDateString()
   deletedAt: Date;
 }

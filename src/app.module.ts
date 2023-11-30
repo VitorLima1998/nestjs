@@ -12,6 +12,7 @@ import { UserModule } from './model/user/user.module';
 import { CategoryModule } from './model/category/category.module';
 import { ProductModule } from './model/product/product.module';
 import { FilesModule } from './model/files/files.module';
+import { ImageModule } from './model/image/image.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { FilesModule } from './model/files/files.module';
     forwardRef(() => CategoryModule),
     forwardRef(() => ProductModule),
     FilesModule,
+    ImageModule,
   ],
   controllers: [AppController],
   providers: [

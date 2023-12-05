@@ -9,9 +9,6 @@ export class ImageService {
 
   async create(data: CreateImageDto[]): Promise<any> {
     const images = data.map((imageUrl) => ({
-      fileName: 'defaultFileName',
-      contentLength: 0,
-      contentType: 'image/jpeg',
       ...imageUrl,
     }));
     return this.prisma.image.createMany({

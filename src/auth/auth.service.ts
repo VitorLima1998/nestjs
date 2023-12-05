@@ -25,6 +25,7 @@ export class AuthService {
   ) {}
 
   createToken(user: User) {
+    // retornar o user
     return {
       accessToken: this.jwt.sign(
         {
@@ -39,6 +40,7 @@ export class AuthService {
           issuer: this.issuer,
         },
       ),
+      user,
     };
   }
 

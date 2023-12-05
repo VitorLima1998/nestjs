@@ -40,6 +40,9 @@ export class ProductService {
       where: {
         id,
       },
+      include: {
+        images: true,
+      },
     });
   }
 
@@ -47,6 +50,7 @@ export class ProductService {
     const products = await this.prisma.product.findMany({
       include: {
         category: true,
+        images: true,
       },
     });
     const productsWithImages = await Promise.all(

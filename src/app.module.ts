@@ -8,12 +8,13 @@ import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
-import { UserModule } from './model/user/user.module';
-import { CategoryModule } from './model/category/category.module';
-import { ProductModule } from './model/product/product.module';
-import { ImageModule } from './model/image/image.module';
-import { PaymentModule } from './model/payment/payment.module';
-import { OrdersModule } from './model/orders/orders.module';
+import { UserModule } from './models/user/user.module';
+import { CategoryModule } from './models/category/category.module';
+import { ProductModule } from './models/product/product.module';
+import { ImageModule } from './models/image/image.module';
+import { PaymentModule } from './models/payment/payment.module';
+import { OrdersModule } from './models/orders/orders.module';
+import { AddressModule } from './models/address/address.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { OrdersModule } from './model/orders/orders.module';
     forwardRef(() => ImageModule),
     forwardRef(() => PaymentModule),
     forwardRef(() => OrdersModule),
+    AddressModule,
   ],
   controllers: [AppController],
   providers: [

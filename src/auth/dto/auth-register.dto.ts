@@ -1,3 +1,3 @@
-import { CreateUserDTO } from 'src/model/user/dto/create-user.dto';
+import { CreateUserDTO } from 'src/models/user/dto/create-user.dto';
 
 export class AuthRegisterDTO extends CreateUserDTO {}
